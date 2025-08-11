@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Snake Game</title>
+    <link rel="icon" type="image/x-icon" href="static/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <meta name="description" content="Classic Snake Game with modern pixel-perfect design">
+    <meta name="keywords" content="snake game, retro games, pixel art, arcade">
+</head>
+<body>
+    <!-- Game Instructions Overlay -->
+    <div class="instructions-overlay" id="instructionsOverlay">
+        <div class="instructions-modal">
+            <h2>🐍 How to Play</h2>
+            <div class="instruction-grid">
+                <div class="control-section">
+                    <h3>Controls</h3>
+                    <div class="control-item">
+                        <span class="key">↑ ↓ ← →</span>
+                        <span>Move Snake</span>
+                    </div>
+                    <div class="control-item">
+                        <span class="key">SPACE</span>
+                        <span>Pause Game</span>
+                    </div>
+                    <div class="control-item">
+                        <span class="key">R</span>
+                        <span>Reset Game</span>
+                    </div>
+                </div>
+                <div class="rules-section">
+                    <h3>Rules</h3>
+                    <ul>
+                        <li>Eat food to grow longer</li>
+                        <li>Avoid hitting walls</li>
+                        <li>Don't crash into yourself</li>
+                        <li>Beat your high score!</li>
+                    </ul>
+                </div>
+            </div>
+            <button class="pixel-btn pink" id="startGameBtn">START PLAYING</button>
+        </div>
+    </div>
+
+    <!-- Game Over Overlay -->
+    <div class="game-over-overlay" id="gameOverOverlay">
+        <div class="game-over-modal">
+            <h2 class="game-over-title">GAME OVER!</h2>
+            <div class="game-stats" id="gameStats">
+                <div class="stat-item">
+                    <span class="stat-label">Final Score:</span>
+                    <span class="stat-value" id="finalScore">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">High Score:</span>
+                    <span class="stat-value" id="modalHighScore">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Snake Length:</span>
+                    <span class="stat-value" id="snakeLength">1</span>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="pixel-btn pink" id="playAgainBtn">PLAY AGAIN</button>
+                <button class="pixel-btn dark-pink" id="backToMenuBtn">MAIN MENU</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pause Overlay -->
+    <div class="pause-overlay" id="pauseOverlay">
+        <div class="pause-modal">
+            <h2>⏸️ PAUSED</h2>
+            <p>Press SPACE or click RESUME to continue</p>
+            <button class="pixel-btn pink" id="resumeBtn">RESUME</button>
+        </div>
+    </div>
+
+    <!-- Main Game Container -->
+    <div id="game-container">
+        <!-- Game Header -->
+        <header class="game-header">
+            <h1>🐍 Snake Game</h1>
+            <button class="info-btn" id="infoBtn" title="Game Instructions">ℹ️</button>
+        </header>
+
+        <!-- Score Display -->
+        <div class="score-container">
+            <div class="score-item">
+                <span class="score-label">Score:</span>
+                <span class="score-value" id="score">0</span>
+            </div>
+            <div class="score-divider">|</div>
+            <div class="score-item">
+                <span class="score-label">High Score:</span>
+                <span class="score-value" id="highScore">0</span>
+            </div>
+            <div class="score-divider">|</div>
+            <div class="score-item">
+                <span class="score-label">Level:</span>
+                <span class="score-value" id="level">1</span>
+            </div>
+        </div>
+
+        <!-- Game Canvas -->
+        <div class="canvas-container">
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
+            <div class="canvas-overlay" id="canvasOverlay">
+                <div class="ready-message">
+                    <h2>Ready to Play?</h2>
+                    <p>Press any arrow key to start!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Controls -->
+        <div class="controls">
+            <button class="pixel-btn pink" id="startBtn">
+                <span class="btn-icon">▶️</span>
+                <span class="btn-text">START</span>
+            </button>
+            <button class="pixel-btn dark-pink" id="pauseBtn">
+                <span class="btn-icon">⏸️</span>
+                <span class="btn-text">PAUSE</span>
+            </button>
+            <button class="pixel-btn pink" id="resetBtn">
+                <span class="btn-icon">🔄</span>
+                <span class="btn-text">RESET</span>
+            </button>
+        </div>
+
+        <!-- Mobile Controls -->
+        <div class="mobile-controls" id="mobileControls">
+            <div class="mobile-control-pad">
+                <button class="mobile-btn up-btn" id="upBtn">▲</button>
+                <div class="horizontal-controls">
+                    <button class="mobile-btn left-btn" id="leftBtn">◄</button>
+                    <button class="mobile-btn right-btn" id="rightBtn">►</button>
+                </div>
+                <button class="mobile-btn down-btn" id="downBtn">▼</button>
+            </div>
+        </div>
+
+        <!-- Settings Panel -->
+        <div class="settings-panel" id="settingsPanel">
+            <h3>⚙️ Settings</h3>
+            <div class="setting-item">
+                <label for="gameSpeed">Game Speed:</label>
+                <select id="gameSpeed" class="setting-select">
+                    <option value="200">Slow</option>
+                    <option value="150" selected>Normal</option>
+                    <option value="100">Fast</option>
+                    <option value="50">Lightning</option>
+                </select>
+            </div>
+            <div class="setting-item">
+                <label for="soundToggle">Sound Effects:</label>
+                <input type="checkbox" id="soundToggle" class="setting-checkbox" checked>
+            </div>
+            <div class="setting-item">
+                <label for="gridToggle">Show Grid:</label>
+                <input type="checkbox" id="gridToggle" class="setting-checkbox">
+            </div>
+            <button class="pixel-btn dark-pink" id="toggleSettings">SETTINGS</button>
+        </div>
+
+        <!-- Footer -->
+        <footer class="game-footer">
+            <p>© 2024 Snake Game | Made with ❤️ | Best Score: <span id="footerHighScore">0</span></p>
+        </footer>
+    </div>
+
+    <!-- Audio Elements (for future sound effects) -->
+    <audio id="eatSound" preload="auto">
+        <source src="static/eat.mp3" type="audio/mpeg">
+        <source src="static/eat.wav" type="audio/wav">
+    </audio>
+    <audio id="gameOverSound" preload="auto">
+        <source src="static/gameover.mp3" type="audio/mpeg">
+        <source src="static/gameover.wav" type="audio/wav">
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
